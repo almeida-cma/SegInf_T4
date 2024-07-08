@@ -1,7 +1,7 @@
 # SegInf_T4
 Identificação de Vulnerabilidades
 
-Sistema de login e registro com melhorias em: backupUP
+Sistema de login e registro com melhorias em: backupUP (necessário criar pasta "backups" na raiz da aplicação).
 
 Para resolução com nome: 
 
