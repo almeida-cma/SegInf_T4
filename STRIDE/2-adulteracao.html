@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segurança contra Tampering (Adulteração de Dados)</title>
+    <style>
+        * { font-family: Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #222; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        .container { background: #333; padding: 20px; border-radius: 10px; width: 320px; text-align: center; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
+        input, button { margin: 10px 0; padding: 10px; width: 100%; border: none; border-radius: 5px; }
+        input { background: #444; color: white; text-align: center; font-size: 18px; }
+        button { background: #0a84ff; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0066cc; }
+        .status { margin-top: 10px; font-size: 14px; }
+        .animation { width: 100%; height: 5px; background: #444; border-radius: 3px; overflow: hidden; margin-top: 10px; }
+        .progress { width: 0%; height: 5px; background: #0a84ff; transition: width 1s; }
+        .alerta { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Simulação de Compra</h2>
+        <p>Produto: Notebook Gamer</p>
+        <p>Preço original: R$ <span id="precoOriginal">5000</span></p>
+        <input type="number" id="preco" value="5000">
+        <button onclick="enviarDados()">Finalizar Compra</button>
+        
+        <div class="animation">
+            <div class="progress"></div>
+        </div>
+
+        <p class="status">Status: <span id="status">Aguardando...</span></p>
+    </div>
+
+    <script>
+        function calcularHash(valor) {
+            return btoa(valor + "seguro123"); // Simulação de hash simples (Base64)
+        }
+
+        function enviarDados() {
+            let precoInformado = document.getElementById("preco").value;
+            let precoReal = document.getElementById("precoOriginal").innerText;
+            let hashCalculado = calcularHash(precoReal); // Gera o hash baseado no preço real
+
+            showProgress(() => {
+                if (precoInformado != precoReal) {
+                    document.getElementById("status").innerHTML = "<span class='alerta'>Erro: Preço adulterado!</span>";
+                } else {
+                    document.getElementById("status").innerHTML = "Compra validada com sucesso!";
+                }
+            });
+        }
+
+        function showProgress(callback) {
+            let progress = document.querySelector(".progress");
+            progress.style.width = "0%";
+            setTimeout(() => {
+                progress.style.width = "100%";
+                setTimeout(() => {
+                    progress.style.width = "0%";
+                    callback();
+                }, 1000);
+            }, 100);
+        }
+    </script>
+
+</body>
+</html>

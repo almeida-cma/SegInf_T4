@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repúdio e Logs de Auditoria</title>
+    <style>
+        * { font-family: Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #222; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        .container { background: #333; padding: 20px; border-radius: 10px; width: 350px; text-align: center; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
+        button { margin: 10px 0; padding: 10px; width: 100%; border: none; border-radius: 5px; background: #0a84ff; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0066cc; }
+        .logs { margin-top: 10px; font-size: 14px; background: #444; padding: 10px; border-radius: 5px; text-align: left; max-height: 200px; overflow-y: auto; }
+        .log-item { border-bottom: 1px solid gray; padding: 5px; }
+        .alerta { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Ações Sensíveis</h2>
+        <p>Usuário: <strong id="usuario">admin123</strong></p>
+        <button onclick="executarAcao('Exclusão de Arquivo')">Excluir Arquivo</button>
+        <button onclick="executarAcao('Alteração de Configuração')">Alterar Configuração</button>
+        
+        <h3>Logs de Auditoria</h3>
+        <div class="logs" id="logContainer"></div>
+    </div>
+
+    <script>
+        async function calcularHash(dado) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(dado);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function executarAcao(acao) {
+            const usuario = document.getElementById("usuario").innerText;
+            const timestamp = new Date().toLocaleString();
+            const dadoParaHash = usuario + acao + timestamp;
+            const hash = await calcularHash(dadoParaHash);
+
+            registrarLog(usuario, acao, timestamp, hash);
+        }
+
+        function registrarLog(usuario, acao, timestamp, hash) {
+            const logContainer = document.getElementById("logContainer");
+            const logEntry = document.createElement("div");
+            logEntry.className = "log-item";
+            logEntry.innerHTML = `<strong>${usuario}</strong> realizou: <em>${acao}</em> em ${timestamp}<br>Hash: <code>${hash}</code>`;
+            logContainer.prepend(logEntry);
+        }
+    </script>
+
+</body>
+</html>

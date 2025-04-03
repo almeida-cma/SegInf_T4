@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Seguro com Token</title>
+    <style>
+        * { font-family: Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #222; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        .container { background: #333; padding: 20px; border-radius: 10px; width: 300px; text-align: center; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
+        input, button { margin: 10px 0; padding: 10px; width: 100%; border: none; border-radius: 5px; }
+        input { background: #444; color: white; }
+        button { background: #0a84ff; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0066cc; }
+        .status { margin-top: 10px; font-size: 14px; }
+        .token-box { background: #444; padding: 10px; margin-top: 10px; word-wrap: break-word; border-radius: 5px; font-size: 12px; }
+        .animation { width: 100%; height: 5px; background: #444; border-radius: 3px; overflow: hidden; margin-top: 10px; }
+        .progress { width: 0%; height: 5px; background: #0a84ff; transition: width 1s; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Login Seguro</h2>
+        <input type="email" id="email" placeholder="Digite seu e-mail">
+        <input type="password" id="password" placeholder="Digite sua senha">
+        <button onclick="login()">Entrar</button>
+        <button onclick="verificarSessao()">Verificar Sessão</button>
+        <button onclick="logout()">Logout</button>
+
+        <div class="animation">
+            <div class="progress"></div>
+        </div>
+
+        <p class="status">Status: <span id="status">Aguardando login...</span></p>
+        <div class="token-box" id="tokenBox" style="display: none;"></div>
+    </div>
+
+    <script>
+        function login() {
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            if (email === "admin@example.com" && password === "123456") {
+                let token = generateToken();
+                sessionStorage.setItem("sessionToken", token);
+                sessionStorage.setItem("sessionUser", email);
+                
+                showProgress(() => {
+                    document.getElementById("status").innerText = "Login bem-sucedido!";
+                    document.getElementById("tokenBox").innerText = "Token de Sessão: " + token;
+                    document.getElementById("tokenBox").style.display = "block";
+                });
+            } else {
+                document.getElementById("status").innerText = "Credenciais incorretas!";
+            }
+        }
+
+        function generateToken() {
+            return Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+        }
+
+        function verificarSessao() {
+            let token = sessionStorage.getItem("sessionToken");
+            if (token) {
+                document.getElementById("status").innerText = "Sessão ativa!";
+                document.getElementById("tokenBox").innerText = "Token de Sessão: " + token;
+                document.getElementById("tokenBox").style.display = "block";
+            } else {
+                document.getElementById("status").innerText = "Nenhuma sessão encontrada.";
+                document.getElementById("tokenBox").style.display = "none";
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem("sessionToken");
+            sessionStorage.removeItem("sessionUser");
+
+            showProgress(() => {
+                document.getElementById("status").innerText = "Sessão encerrada.";
+                document.getElementById("tokenBox").style.display = "none";
+            });
+        }
+
+        function showProgress(callback) {
+            let progress = document.querySelector(".progress");
+            progress.style.width = "0%";
+            setTimeout(() => {
+                progress.style.width = "100%";
+                setTimeout(() => {
+                    progress.style.width = "0%";
+                    callback();
+                }, 1000);
+            }, 100);
+        }
+    </script>
+
+</body>
+</html>

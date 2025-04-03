@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevação de Privilégio</title>
+    <style>
+        * { font-family: Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #222; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        .container { background: #333; padding: 20px; border-radius: 10px; width: 400px; text-align: center; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
+        .status { margin-top: 10px; font-size: 14px; background: #444; padding: 10px; border-radius: 5px; text-align: center; }
+        button { margin: 10px 5px; padding: 10px; width: 90%; border: none; border-radius: 5px; background: #ff4c4c; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #cc0000; }
+        .admin { display: none; margin-top: 10px; padding: 10px; background: gold; color: black; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Sistema de Acesso</h2>
+        <p><strong>Nível de Acesso:</strong> <span id="nivelAcesso">Usuário Comum</span></p>
+        <button onclick="tentarAcessarAdmin()">Tentar Acessar Área Administrativa</button>
+        <div class="admin" id="areaAdmin">📌 Bem-vindo à Área Administrativa! Você não deveria estar aqui? 🚨</div>
+        <div class="status" id="status">Status: Acesso seguro</div>
+    </div>
+
+    <script>
+        let nivelAcesso = "user"; // Simula um usuário comum
+
+        function tentarAcessarAdmin() {
+            if (nivelAcesso === "admin") {
+                document.getElementById("areaAdmin").style.display = "block";
+                document.getElementById("status").innerHTML = "🚨 Alerta: Usuário não autorizado acessou a área admin!";
+            } else {
+                document.getElementById("status").innerHTML = "🔒 Acesso negado! Você não tem privilégios suficientes.";
+            }
+        }
+    </script>
+
+</body>
+</html>

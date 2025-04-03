@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denial of Service (DDoS)</title>
+    <style>
+        * { font-family: Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #222; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        .container { background: #333; padding: 20px; border-radius: 10px; width: 400px; text-align: center; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
+        button { margin: 10px 5px; padding: 10px; width: 45%; border: none; border-radius: 5px; background: #ff4c4c; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #cc0000; }
+        .status { margin-top: 10px; font-size: 14px; background: #444; padding: 10px; border-radius: 5px; text-align: center; }
+        .bloqueado { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Ataque DDoS Simulado</h2>
+        <p>Teste como um ataque pode afetar um site!</p>
+        <button onclick="fazerRequisicao()">Acessar Site</button>
+        <button onclick="ataqueDDoS()">Simular Ataque 🚨</button>
+        <div class="status" id="status">Status: Site funcionando ✅</div>
+    </div>
+
+    <script>
+        let tentativas = 0;
+        let bloqueado = false;
+
+        function fazerRequisicao() {
+            if (bloqueado) {
+                document.getElementById("status").innerHTML = "<span class='bloqueado'>Seu IP foi bloqueado! 🚫</span>";
+                return;
+            }
+
+            tentativas++;
+            if (tentativas > 5) {
+                document.getElementById("status").innerHTML = "<span class='bloqueado'>🚨 IP Bloqueado por excesso de requisições!</span>";
+                bloqueado = true;
+            } else {
+                document.getElementById("status").innerText = `Status: ${tentativas} acessos realizados ✅`;
+            }
+        }
+
+        function ataqueDDoS() {
+            for (let i = 0; i < 10; i++) {
+                fazerRequisicao();
+            }
+        }
+    </script>
+
+</body>
+</html>
